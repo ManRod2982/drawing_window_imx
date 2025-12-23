@@ -55,7 +55,7 @@ std::vector<double> MouseDrawing::export_to_vector(int w, int h, double scale) {
   scaled_context->paint();
 
   // 4. Extract pixel data and convert to grayscale vector
-  uint8_t* data = scaled_surface->get_data();
+  uint8_t *data = scaled_surface->get_data();
   int stride = scaled_surface->get_stride();
   std::vector<double> grayscale_pixels(w * h);
 
@@ -63,7 +63,7 @@ std::vector<double> MouseDrawing::export_to_vector(int w, int h, double scale) {
     for (int x = 0; x < w; ++x) {
       // Cairo typically uses CAIRO_FORMAT_ARGB32, which is BGRX in memory on
       // little-endian systems
-      unsigned char* pixel = data + y * stride + x * 4;
+      unsigned char *pixel = data + y * stride + x * 4;
       unsigned char blue = pixel[0];
       unsigned char green = pixel[1];
       unsigned char red = pixel[2];
@@ -84,7 +84,7 @@ std::vector<double> MouseDrawing::export_to_vector(int w, int h, double scale) {
 // GTK provides and empty cairo context on each on_draw call
 // therefore we store the context on a surface and restore the
 // context every time we are called.
-bool MouseDrawing::on_draw(const Cairo::RefPtr<Cairo::Context>& cr) {
+bool MouseDrawing::on_draw(const Cairo::RefPtr<Cairo::Context> &cr) {
   auto allocation = this->get_allocation();
   // Restore cairo context
   // each time on_draw is called a fresh context is created
@@ -96,26 +96,26 @@ bool MouseDrawing::on_draw(const Cairo::RefPtr<Cairo::Context>& cr) {
 
   // Check the state to determine our action
   switch (this->state) {
-    case DrawState::clear:
-      // Set black background
-      cr->set_source_rgb(0.0, 0.0, 0.0);
-      cr->paint();
-      this->state = DrawState::draw;
-      break;
+  case DrawState::clear:
+    // Set black background
+    cr->set_source_rgb(0.0, 0.0, 0.0);
+    cr->paint();
+    this->state = DrawState::draw;
+    break;
 
-    case DrawState::draw:
-      cr->save();
-      cr->set_line_width(0);
-      cr->set_source_rgb(1.0, 1.0, 1.0);
-      // Draw circles where the mouse has moved
-      for (const auto& point : points) {
-        cr->arc(point.x, point.y, brush_size, 0, 2 * M_PI);
-        cr->fill();
-      }
-      cr->restore();
-      break;
-    default:
-      break;
+  case DrawState::draw:
+    cr->save();
+    cr->set_line_width(0);
+    cr->set_source_rgb(1.0, 1.0, 1.0);
+    // Draw circles where the mouse has moved
+    for (const auto &point : points) {
+      cr->arc(point.x, point.y, brush_size, 0, 2 * M_PI);
+      cr->fill();
+    }
+    cr->restore();
+    break;
+  default:
+    break;
   }
 
   // Save surface so that we can restore the context on the next call
@@ -130,34 +130,34 @@ bool MouseDrawing::on_draw(const Cairo::RefPtr<Cairo::Context>& cr) {
 
 // Checks for left mouse clicks and starts logging the mouse
 // coordinates on our points vector to be drawn later
-bool MouseDrawing::on_button_press_event(GdkEventButton* event) {
-  if (event->button == 1) {  // Left mouse button
+bool MouseDrawing::on_button_press_event(GdkEventButton *event) {
+  if (event->button == 1) { // Left mouse button
     this->left_clicked = true;
     this->state = DrawState::draw;
     points.push_back({event->x, event->y});
     std::cout << event->x << " " << event->y << std::endl;
-    return true;  // Event handled
+    return true; // Event handled
   }
   return false;
 }
 
 // Checks when the click is released to stop drawing.
-bool MouseDrawing::on_button_release_event(GdkEventButton* event) {
+bool MouseDrawing::on_button_release_event(GdkEventButton *event) {
   if (event->button == 1) {
     this->left_clicked = false;
-    return true;  // Event handled
+    return true; // Event handled
   }
   return false;
 }
 
 // Logs new coordinates as we move with the button pressed down.
 // if movement is detected but the left button was released do nothing.
-bool MouseDrawing::on_motion_notify_event(GdkEventMotion* event) {
+bool MouseDrawing::on_motion_notify_event(GdkEventMotion *event) {
   if (this->left_clicked) {
     points.push_back({event->x, event->y});
-    queue_draw();  // Request a redraw
+    queue_draw(); // Request a redraw
     std::cout << event->x << " " << event->y << std::endl;
-    return true;  // Event handled
+    return true; // Event handled
   }
   return false;
 }
