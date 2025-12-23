@@ -13,8 +13,8 @@
 // predict_button: used to save the screen to an image and get the NN info
 // Drawing area
 // Everything is enclosed in a Gtk::Grid widget
-Window::Window(SimpleNN nn)
-    : nn(nn), clear_button("Clear"), predict_button("Predict") {
+Window::Window()
+    : clear_button("Clear"), predict_button("Predict") {
   set_title("NMIST example");
   set_border_width(10);
 
@@ -56,8 +56,8 @@ void Window::on_clear_clicked() {
 }
 
 // Helper function used to get the index of the
-// maximum value in a VectorXd
-int get_max_index(Eigen::VectorXd vec) {
+// maximum value in a Vector
+int get_max_index(std::vector<double> vec) {
   auto max_iter = std::max_element(vec.begin(), vec.end());
   return std::distance(vec.begin(), max_iter);
 }
@@ -67,9 +67,8 @@ void Window::on_predict_clicked() {
   // Save screen to file
   std::cout << "Predict clicked!" << std::endl;
   auto drawing = mouse_drawing.export_to_vector(28, 28, 255.0);
-  auto result = nn.forward_propagation(drawing);
-  int number = get_max_index(result);
-  std::string display = "You drew a: " + std::to_string(number);
-  std::cout << display << std::endl;
-  text_view.set_text(display);
+  //int number = get_max_index(result);
+  //std::string display = "You drew a: " + std::to_string(number);
+  //std::cout << display << std::endl;
+  //text_view.set_text(display);
 }

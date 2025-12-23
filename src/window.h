@@ -12,7 +12,6 @@
 #include <gtkmm/window.h>
 
 #include "mouse_drawing.h"
-#include "simple_nn.hh"
 
 // Window used to keep all the widgets
 // it contains a grid widget that houses
@@ -21,7 +20,7 @@
 // 1 text area
 class Window : public Gtk::Window {
  public:
-  Window(SimpleNN nn);
+  Window();
   virtual ~Window();
 
  protected:
@@ -34,8 +33,4 @@ class Window : public Gtk::Window {
   MouseDrawing mouse_drawing;
   Gtk::Button clear_button, predict_button;
   Gtk::Label text_view;
-
- private:
-  // Neural network used to detect the number drawn
-  SimpleNN nn;
 };

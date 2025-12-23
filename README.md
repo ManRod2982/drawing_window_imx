@@ -7,11 +7,11 @@ It works with [SimpleNN](https://github.com/ManRod2982/SimpleNN) and a pre-train
 
 # Building the project
 
-The project is built using CMake after installing the dependencies one can simply run
+The project is built using CMake and it requires a toolchain with GTKMM3 support.
 
 ```
-mkdir build
-cmake -B build
+source /opt/fsl-imx-xwayland/6.12-walnascar-full-gtkmm3/environment-setup-armv8a-poky-linux
+cmake -B build -DCMAKE_TOOLCHAIN_FILE=$OECORE_NATIVE_SYSROOT/usr/share/cmake/OEToolchainConfig.cmake
 cmake --build build
 ```
 

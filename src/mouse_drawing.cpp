@@ -37,7 +37,7 @@ void MouseDrawing::clear_screen() {
 // Saves the current surface to a png file called "image"
 void MouseDrawing::save_screen() { this->surface->write_to_png("image.png"); }
 
-Eigen::VectorXd MouseDrawing::export_to_vector(int w, int h, double scale) {
+std::vector<double> MouseDrawing::export_to_vector(int w, int h, double scale) {
   // Create new Cairo surface for the scaled surface
   Cairo::RefPtr<Cairo::ImageSurface> scaled_surface =
       Cairo::ImageSurface::create(Cairo::FORMAT_ARGB32, w, h);
@@ -57,7 +57,7 @@ Eigen::VectorXd MouseDrawing::export_to_vector(int w, int h, double scale) {
   // 4. Extract pixel data and convert to grayscale vector
   uint8_t* data = scaled_surface->get_data();
   int stride = scaled_surface->get_stride();
-  Eigen::VectorXd grayscale_pixels(w * h);
+  std::vector<double> grayscale_pixels(w * h);
 
   for (int y = 0; y < h; ++y) {
     for (int x = 0; x < w; ++x) {
