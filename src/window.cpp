@@ -5,6 +5,9 @@
 //
 // Window definition, this is where the whole layout is defined
 #include "window.h"
+#include "tensorflow/lite/interpreter_builder.h"
+#include "tensorflow/lite/kernels/register.h"
+#include "tensorflow/lite/model_builder.h"
 
 #include <iostream>
 
@@ -13,10 +16,35 @@
 // predict_button: used to save the screen to an image and get the NN info
 // Drawing area
 // Everything is enclosed in a Gtk::Grid widget
-Window::Window()
-    : clear_button("Clear"), predict_button("Predict") {
+Window::Window() : clear_button("Clear"), predict_button("Predict") {
   set_title("NMIST example");
   set_border_width(10);
+
+  // Create TFLite interpreter
+  // Load model
+  const char *model_path = "";
+  std::unique_ptr<tflite::FlatBufferModel> model =
+      tflite::FlatBufferModel::BuildFromFile(model_path);
+  if (!model) {
+    std::cerr << "Failed to load model: " << model_path << std::endl;
+    throw std::invalid_argument("Invalid model");
+  }
+
+  // Build the interpreter
+  // Resolver makes sure the operations in the model are available to the
+  // interpreter
+  tflite::ops::builtin::BuiltinOpResolver resolver;
+  tflite::InterpreterBuilder(*model, resolver)(&interpreter_);
+  if (interpreter_ == nullptr) {
+    std::cerr << "Failed to build interpreter" << std::endl;
+    throw std::invalid_argument("Invalid interpreter");
+  }
+
+  // Allocate tensors for the model
+  if (interpreter_->AllocateTensors() != kTfLiteOk) {
+    std::cerr << "Failed to allocate tensors" << std::endl;
+    throw std::runtime_error("Unable to allocate tensors");
+  }
 
   // Adds grid to the window and sets the same width to all the columns
   add(my_grid);
@@ -67,8 +95,20 @@ void Window::on_predict_clicked() {
   // Save screen to file
   std::cout << "Predict clicked!" << std::endl;
   auto drawing = mouse_drawing.export_to_vector(28, 28, 255.0);
-  //int number = get_max_index(result);
-  //std::string display = "You drew a: " + std::to_string(number);
-  //std::cout << display << std::endl;
-  //text_view.set_text(display);
+  // Fill input buffer
+  // double* input = intepreter_->typed_input_tensor<double>(0);
+  // std::memcpy(input, drawing.data(), 784);
+
+  // Invoke TFLite model
+  if (interpreter_->Invoke() != kTfLiteOk) {
+    std::cerr << "Failed to invoke Interpreter!" << std::endl;
+  }
+
+  // Get results
+  // double* output = interpreter_->typed_output_tensor<double>(0);
+
+  // int number = get_max_index(result);
+  // std::string display = "You drew a: " + std::to_string(number);
+  // std::cout << display << std::endl;
+  // text_view.set_text(display);
 }

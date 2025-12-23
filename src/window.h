@@ -12,6 +12,7 @@
 #include <gtkmm/window.h>
 
 #include "mouse_drawing.h"
+#include "tensorflow/lite/interpreter.h"
 
 // Window used to keep all the widgets
 // it contains a grid widget that houses
@@ -19,11 +20,11 @@
 // 1 drawing area
 // 1 text area
 class Window : public Gtk::Window {
- public:
+public:
   Window();
   virtual ~Window();
 
- protected:
+protected:
   // Signal handlers:
   void on_clear_clicked();
   void on_predict_clicked();
@@ -33,4 +34,8 @@ class Window : public Gtk::Window {
   MouseDrawing mouse_drawing;
   Gtk::Button clear_button, predict_button;
   Gtk::Label text_view;
+
+private:
+  // TFlite interpreter
+  std::unique_ptr<tflite::Interpreter> interpreter_;
 };

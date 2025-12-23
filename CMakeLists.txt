@@ -14,7 +14,7 @@ target_sources(window
     src/window.cpp
     src/mouse_drawing.cpp
 )
-target_link_libraries(window PRIVATE ${GTKMM_LIBRARIES})
+target_link_libraries(window PRIVATE ${GTKMM_LIBRARIES} tensorflow-lite)
 
 # Setup CMake to use GTK+, tell the compiler where to look for headers
 # and to the linker where to look for libraries
