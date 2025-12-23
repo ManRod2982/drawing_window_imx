@@ -22,7 +22,7 @@ Window::Window() : clear_button("Clear"), predict_button("Predict") {
 
   // Create TFLite interpreter
   // Load model
-  const char *model_path = "";
+  const char *model_path = "cnn.tflite";
   std::unique_ptr<tflite::FlatBufferModel> model =
       tflite::FlatBufferModel::BuildFromFile(model_path);
   if (!model) {
@@ -85,7 +85,7 @@ void Window::on_clear_clicked() {
 
 // Helper function used to get the index of the
 // maximum value in a Vector
-int get_max_index(std::vector<double> vec) {
+int get_max_index(std::vector<float> vec) {
   auto max_iter = std::max_element(vec.begin(), vec.end());
   return std::distance(vec.begin(), max_iter);
 }
@@ -96,8 +96,8 @@ void Window::on_predict_clicked() {
   std::cout << "Predict clicked!" << std::endl;
   auto drawing = mouse_drawing.export_to_vector(28, 28, 255.0);
   // Fill input buffer
-  // double* input = intepreter_->typed_input_tensor<double>(0);
-  // std::memcpy(input, drawing.data(), 784);
+  float *input = interpreter_->typed_input_tensor<float>(0);
+  std::memcpy(input, drawing.data(), drawing.size() * sizeof(float));
 
   // Invoke TFLite model
   if (interpreter_->Invoke() != kTfLiteOk) {
@@ -105,10 +105,16 @@ void Window::on_predict_clicked() {
   }
 
   // Get results
-  // double* output = interpreter_->typed_output_tensor<double>(0);
+  float *output = interpreter_->typed_output_tensor<float>(0);
+  std::vector<float> output_vec(10);
+  std::memcpy(output_vec.data(), output, sizeof(float) * output_vec.size());
 
-  // int number = get_max_index(result);
-  // std::string display = "You drew a: " + std::to_string(number);
-  // std::cout << display << std::endl;
-  // text_view.set_text(display);
+  for (size_t i = 0; i < output_vec.size(); i++) {
+    std::cout << i << ": " << output_vec[i] << std::endl;
+  }
+
+  int number = get_max_index(output_vec);
+  std::string display = "You drew a: " + std::to_string(number);
+  std::cout << display << std::endl;
+  text_view.set_text(display);
 }

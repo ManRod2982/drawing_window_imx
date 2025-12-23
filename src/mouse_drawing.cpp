@@ -37,7 +37,7 @@ void MouseDrawing::clear_screen() {
 // Saves the current surface to a png file called "image"
 void MouseDrawing::save_screen() { this->surface->write_to_png("image.png"); }
 
-std::vector<double> MouseDrawing::export_to_vector(int w, int h, double scale) {
+std::vector<float> MouseDrawing::export_to_vector(int w, int h, double scale) {
   // Create new Cairo surface for the scaled surface
   Cairo::RefPtr<Cairo::ImageSurface> scaled_surface =
       Cairo::ImageSurface::create(Cairo::FORMAT_ARGB32, w, h);
@@ -57,7 +57,7 @@ std::vector<double> MouseDrawing::export_to_vector(int w, int h, double scale) {
   // 4. Extract pixel data and convert to grayscale vector
   uint8_t *data = scaled_surface->get_data();
   int stride = scaled_surface->get_stride();
-  std::vector<double> grayscale_pixels(w * h);
+  std::vector<float> grayscale_pixels(w * h);
 
   for (int y = 0; y < h; ++y) {
     for (int x = 0; x < w; ++x) {
@@ -135,7 +135,6 @@ bool MouseDrawing::on_button_press_event(GdkEventButton *event) {
     this->left_clicked = true;
     this->state = DrawState::draw;
     points.push_back({event->x, event->y});
-    std::cout << event->x << " " << event->y << std::endl;
     return true; // Event handled
   }
   return false;
@@ -156,8 +155,7 @@ bool MouseDrawing::on_motion_notify_event(GdkEventMotion *event) {
   if (this->left_clicked) {
     points.push_back({event->x, event->y});
     queue_draw(); // Request a redraw
-    std::cout << event->x << " " << event->y << std::endl;
-    return true; // Event handled
+    return true;  // Event handled
   }
   return false;
 }
