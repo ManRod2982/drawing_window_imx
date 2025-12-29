@@ -1,35 +1,80 @@
 # Drawing window
 
-This is a simple window that allows to write in black and white.
-It works with [SimpleNN](https://github.com/ManRod2982/SimpleNN) and a pre-trained neural network to identify the digit that has been drawn.
+This is a simple window that allows to write a digit in black and white and use a pre-trained Tensorflow lite model to
+identify the digit.
 
-![alt text](https://github.com/ManRod2982/drawing_window/raw/master/docs/window_example.png "Nmist window")
+![alt text](https://github.com/ManRod2982/drawing_window/raw/master/docs/window_example.png "Mnist window")
 
 # Building the project
 
-The project is built using CMake and it requires a toolchain with GTKMM3 support.
+The project is built using CMake and it requires a toolchain with GTKMM3 support. In order to generate the toolchain
+the following needs to be added to the local.conf file:
+
+```
+IMAGE_INSTALL:append = " gtkmm3"
+```
+
+Also recommended to add the following to avoid the build crashing due to out of memory errors:
+```
+BB_NUMBER_THREADS="8"
+PARALLEL_MAKE="-j8"
+BB_PRESSURE_MAX_CPU ?= "50000"
+BB_PRESSURE_MAX_IO ?= "100000"
+BB_PRESSURE_MAX_MEMORY ?= "25000"
+```
+
+After modifying the local.conf the image and the SDK can be created, to generate the SDK:
+
+```
+bitbake imx-image-full -c populate_sdk
+```
+
+And to generate the image:
+
+```
+bitbake imx-image-full
+```
+Note that up to 500GB are consumed during the build process.
+
+Once the toolchain has been generated it can be installed as follows:
+
+```
+./tmp/deploy/sdk/fsl-imx-xwayland-glibc-x86_64-imx-image-full-armv8a-imx93-11x11-lpddr4x-frdm-toolchain-6.12-walnascar.sh
+```
+
+And the image can be flashed onto an sd card as follows:
+
+```
+zstdcat imx-image-full-imx93-11x11-lpddr4x-frdm.rootfs.wic.zst | sudo dd of=/dev/mmcblk0 bs=1M conv=fsync
+```
+
+To build the project the toolchain needs to be sourced:
 
 ```
 source /opt/fsl-imx-xwayland/6.12-walnascar-full-gtkmm3/environment-setup-armv8a-poky-linux
 cmake -B build -DCMAKE_TOOLCHAIN_FILE=$OECORE_NATIVE_SYSROOT/usr/share/cmake/OEToolchainConfig.cmake
-cmake --build build
+cmake --build build/window
 ```
 
-And the target binary will be built and can be executed as follows
+And the target binary will be built for ARM64, now it can be simply copied onto the target by `scp` or just copy it to the sd card
+on a Linux file system:
 
-`./build/window`
+```
+sudo cp build/window /media/user/root/root/
+```
+
+Boot the target and you should be able to execute the binary
+```
+.window
+```
 
 # Dependencies
 
-This project uses CMake 3.10 or later and Gtkmm 3.0
+This project uses CMake 3.10 and requires a toolchain for the ARM64 (see above) with GTKMM3 and TFLite support.
 
 ```
 sudo apt install cmake
-sudo apt install libgtkmm-3.0-dev
-sudo apt-get install libeigen3-dev
 ```
-
-It also depends on [SimpleNN](https://github.com/ManRod2982/SimpleNN) it can be cloned in placed in the same folder for cmake to add it as a subdirectory.
 
 # License
 
