@@ -19,7 +19,7 @@
 // Drawing area
 // Everything is enclosed in a Gtk::Grid widget
 Window::Window() : clear_button("Clear"), predict_button("Predict") {
-  set_title("NMIST example");
+  set_title("MNIST example");
   set_border_width(10);
 
   // Create TFLite interpreter
