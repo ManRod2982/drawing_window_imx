@@ -23,7 +23,8 @@ class MouseDrawing : public Gtk::DrawingArea {
   void save_screen(void);
   // Exports screen to a grayscale vector
   // takes the width and height to be scaled to
-  std::vector<float> export_to_vector(int w, int h, double scale);
+  template <typename T>
+  std::vector<T> export_to_vector(int w, int h, double scale);
 
   virtual ~MouseDrawing();
   // State definitions to decide how to handle on_draw calls

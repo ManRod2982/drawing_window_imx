@@ -63,9 +63,23 @@ on a Linux file system:
 sudo cp build/window /media/user/root/root/
 ```
 
-Boot the target and you should be able to execute the binary
+Boot the target and you should be able to execute the binary, the application requires:
+
+- Model path: `-m model_path`
+
+and has two optional parameters:
+- Delegate library path: `-d delegate_path`
+- Verbosity, without this option verbosity is disabled: '-v'
+
+The following are some examples.
+
+Tensorflite model, no quantization and no delegate, hence XNN will be used:
 ```
-.window
+./window -m cnn.tflite -v
+```
+Ethos model with the ethos delegate and verbosity enabled
+```
+./window -m cnn_quant_vela.tflite -d /usr/lib/libethosu_delegate.so -v
 ```
 
 # Dependencies

@@ -11,6 +11,7 @@ add_executable(window)
 target_sources(window
     PRIVATE
     src/main.cpp
+    src/nn_model.cpp
     src/window.cpp
     src/mouse_drawing.cpp
 )

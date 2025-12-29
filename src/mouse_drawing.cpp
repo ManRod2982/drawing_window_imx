@@ -37,7 +37,8 @@ void MouseDrawing::clear_screen() {
 // Saves the current surface to a png file called "image"
 void MouseDrawing::save_screen() { this->surface->write_to_png("image.png"); }
 
-std::vector<float> MouseDrawing::export_to_vector(int w, int h, double scale) {
+template <typename T>
+std::vector<T> MouseDrawing::export_to_vector(int w, int h, double scale) {
   // Create new Cairo surface for the scaled surface
   Cairo::RefPtr<Cairo::ImageSurface> scaled_surface =
       Cairo::ImageSurface::create(Cairo::FORMAT_ARGB32, w, h);
@@ -57,7 +58,7 @@ std::vector<float> MouseDrawing::export_to_vector(int w, int h, double scale) {
   // 4. Extract pixel data and convert to grayscale vector
   uint8_t *data = scaled_surface->get_data();
   int stride = scaled_surface->get_stride();
-  std::vector<float> grayscale_pixels(w * h);
+  std::vector<T> grayscale_pixels(w * h);
 
   for (int y = 0; y < h; ++y) {
     for (int x = 0; x < w; ++x) {
@@ -71,7 +72,15 @@ std::vector<float> MouseDrawing::export_to_vector(int w, int h, double scale) {
       // Grayscale conversion using luminance formula (approx)
       unsigned char gray = static_cast<unsigned char>(
           0.2126 * red + 0.7152 * green + 0.0722 * blue);
-      grayscale_pixels[y * w + x] = gray / scale;
+      // Type-specific logic
+      if constexpr (std::is_same_v<T, float>) {
+        // For float: map to 0.0 - 1.0 (assuming scale is 255.0)
+        grayscale_pixels[y * w + x] = static_cast<float>(gray / scale);
+      } else if constexpr (std::is_same_v<T, int8_t>) {
+        // For int8_t: map 0...255 to -128...127
+        // We ignore the 'scale' parameter here as quantization is fixed
+        grayscale_pixels[y * w + x] = static_cast<int8_t>(gray - 128);
+      }
     }
   }
 
@@ -159,3 +168,9 @@ bool MouseDrawing::on_motion_notify_event(GdkEventMotion *event) {
   }
   return false;
 }
+
+// Allows us to separate implementation in cpp
+template std::vector<int8_t> MouseDrawing::export_to_vector(int w, int h,
+                                                            double scale);
+template std::vector<float> MouseDrawing::export_to_vector(int w, int h,
+                                                           double scale);
