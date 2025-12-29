@@ -96,26 +96,26 @@ bool MouseDrawing::on_draw(const Cairo::RefPtr<Cairo::Context> &cr) {
 
   // Check the state to determine our action
   switch (this->state) {
-  case DrawState::clear:
-    // Set black background
-    cr->set_source_rgb(0.0, 0.0, 0.0);
-    cr->paint();
-    this->state = DrawState::draw;
-    break;
+    case DrawState::clear:
+      // Set black background
+      cr->set_source_rgb(0.0, 0.0, 0.0);
+      cr->paint();
+      this->state = DrawState::draw;
+      break;
 
-  case DrawState::draw:
-    cr->save();
-    cr->set_line_width(0);
-    cr->set_source_rgb(1.0, 1.0, 1.0);
-    // Draw circles where the mouse has moved
-    for (const auto &point : points) {
-      cr->arc(point.x, point.y, brush_size, 0, 2 * M_PI);
-      cr->fill();
-    }
-    cr->restore();
-    break;
-  default:
-    break;
+    case DrawState::draw:
+      cr->save();
+      cr->set_line_width(0);
+      cr->set_source_rgb(1.0, 1.0, 1.0);
+      // Draw circles where the mouse has moved
+      for (const auto &point : points) {
+        cr->arc(point.x, point.y, brush_size, 0, 2 * M_PI);
+        cr->fill();
+      }
+      cr->restore();
+      break;
+    default:
+      break;
   }
 
   // Save surface so that we can restore the context on the next call
@@ -131,11 +131,11 @@ bool MouseDrawing::on_draw(const Cairo::RefPtr<Cairo::Context> &cr) {
 // Checks for left mouse clicks and starts logging the mouse
 // coordinates on our points vector to be drawn later
 bool MouseDrawing::on_button_press_event(GdkEventButton *event) {
-  if (event->button == 1) { // Left mouse button
+  if (event->button == 1) {  // Left mouse button
     this->left_clicked = true;
     this->state = DrawState::draw;
     points.push_back({event->x, event->y});
-    return true; // Event handled
+    return true;  // Event handled
   }
   return false;
 }
@@ -144,7 +144,7 @@ bool MouseDrawing::on_button_press_event(GdkEventButton *event) {
 bool MouseDrawing::on_button_release_event(GdkEventButton *event) {
   if (event->button == 1) {
     this->left_clicked = false;
-    return true; // Event handled
+    return true;  // Event handled
   }
   return false;
 }
@@ -154,8 +154,8 @@ bool MouseDrawing::on_button_release_event(GdkEventButton *event) {
 bool MouseDrawing::on_motion_notify_event(GdkEventMotion *event) {
   if (this->left_clicked) {
     points.push_back({event->x, event->y});
-    queue_draw(); // Request a redraw
-    return true;  // Event handled
+    queue_draw();  // Request a redraw
+    return true;   // Event handled
   }
   return false;
 }

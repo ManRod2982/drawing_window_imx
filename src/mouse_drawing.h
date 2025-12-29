@@ -15,7 +15,7 @@
 // It handles mouse events and defines a default drawing area
 // it also keeps state betwen different on_draw calls
 class MouseDrawing : public Gtk::DrawingArea {
-public:
+ public:
   MouseDrawing();
   // Used to clear the screen
   void clear_screen(void);
@@ -28,11 +28,11 @@ public:
   virtual ~MouseDrawing();
   // State definitions to decide how to handle on_draw calls
   enum class DrawState {
-    clear, // Clears the screen
-    draw   // Draws the points currently stored on the screen
+    clear,  // Clears the screen
+    draw    // Draws the points currently stored on the screen
   };
 
-protected:
+ protected:
   // Draw handler
   virtual bool on_draw(const Cairo::RefPtr<Cairo::Context> &cr);
   // Handles mouse click events
@@ -42,7 +42,7 @@ protected:
   // Handles whenever the mouse moves over the area
   bool on_motion_notify_event(GdkEventMotion *event);
 
-private:
+ private:
   // Default width of the drawing area
   int drawing_area_w = 250;
   // Default height of the drawing area
