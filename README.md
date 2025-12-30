@@ -3,7 +3,7 @@
 This is a simple window that allows to write a digit in black and white and use a pre-trained Tensorflow lite model to
 identify the digit.
 
-![alt text](https://github.com/ManRod2982/drawing_window/raw/master/docs/window_example.png "Mnist window")
+![alt text](imgs/window_example.png "Mnist window")
 
 # Building the project
 
