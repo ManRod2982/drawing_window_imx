@@ -6,3 +6,12 @@
 
 # Build directory
 build/
+
+# Data directory for MNIST
+scripts/data/
+__pycache__/
+*.tflite
+*.pth
+*.keras
+*.csv
+*.onnx
