@@ -90,6 +90,10 @@ This project uses CMake 3.10 and requires a toolchain for the ARM64 (see above) 
 sudo apt install cmake
 ```
 
+# Model examples
+
+[Scripts](scripts/) are provided for creating example Tensorflow lite models using both Tensorflow/keras and pytorch.
+
 # License
 
 This software is available under the MIT license.
