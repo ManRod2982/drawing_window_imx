@@ -18,9 +18,9 @@ This will install all the packages required to run all the scripts in this sub f
 
 | Script | Overview |
 | ------ | -------- |
-| train_pytorch.py   | Script used to train the pytorch model and save a .pth file with the weights and biases of the model. |
-| pytorch_model.py   | Pytorch model description, since pytorch models do not save the graph structure the model is saved in a separate file. That allows us to load the model in different scripts without repeating it. |
-| pytorch2onnx.py    | Script used to convert the pre-trained Pytorch model to onnx format. |
-| pytorch2tflite.py  | Script used to convert the pre-trained Pytorch model to Tensorflow lite format. |
-| train_tf.py        | Script used to define and train a model using Tensorflow/keras, after training it saves the model in keras format. |
-| tf2quant_tflite.py | Script used to load a pre-trained keras model, quantize it and convert it to tensorflow lite format. |
+| [train_pytorch.py](train_pytorch.py)   | Script used to train the pytorch model and save a .pth file with the weights and biases of the model. |
+| [pytorch_model.py](pytorch_model.py)   | Pytorch model description, since pytorch models do not save the graph structure the model is saved in a separate file. That allows us to load the model in different scripts without repeating it. |
+| [pytorch2onnx.py](pytorch2onnx.py)    | Script used to convert the pre-trained Pytorch model to onnx format. |
+| [pytorch2tflite.py](pytorch2tflite.py)  | Script used to convert the pre-trained Pytorch model to Tensorflow lite format. |
+| [train_tf.py](train_tf.py)        | Script used to define and train a model using Tensorflow/keras, after training it saves the model in keras format. |
+| [tf2quant_tflite.py](tf2quant_tflite.py) | Script used to load a pre-trained keras model, quantize it and convert it to tensorflow lite format. |
