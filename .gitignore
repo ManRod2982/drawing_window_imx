@@ -5,7 +5,7 @@
 *.code-workspace
 
 # Build directory
-build/
+drawing_window_cpp/build/
 
 # Data directory for MNIST
 models/data/
