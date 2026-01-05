@@ -92,7 +92,7 @@ sudo apt install cmake
 
 # Model examples
 
-[Scripts](scripts/) are provided for creating example Tensorflow lite models using both Tensorflow/keras and pytorch.
+[Models](models/) are provided for creating example Tensorflow lite models using both Tensorflow/keras and pytorch.
 
 # License
 
