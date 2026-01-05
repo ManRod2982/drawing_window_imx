@@ -8,7 +8,7 @@
 build/
 
 # Data directory for MNIST
-scripts/data/
+models/data/
 __pycache__/
 *.tflite
 *.pth
